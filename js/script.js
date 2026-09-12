@@ -156,9 +156,89 @@ themeButton.addEventListener('click', () => {
 
 renderTheme();
 
+// hero typing effect
+const typingText = document.querySelector('#typing-text');
+const typingCursor = document.querySelector('.typing-cursor');
+const typingPhrases = [
+    '웹 개발의 기초를 공부합니다.',
+    '배운 내용을 직접 구현합니다.',
+    '더 나은 코드를 고민합니다.',
+];
+
+const typingState = {
+    phraseIndex: 0,
+    characterIndex: 0,
+    isDeleting: false,
+    timerId: null,
+};
+
+const renderTypingText = () => {
+    const phrase = typingPhrases[typingState.phraseIndex];
+    typingText.textContent = phrase.slice(0, typingState.characterIndex);
+};
+
+const scheduleTypingStep = (delay) => {
+    typingState.timerId = window.setTimeout(runTypingStep, delay);
+};
+
+const runTypingStep = () => {
+    const phrase = typingPhrases[typingState.phraseIndex];
+
+    if (!typingState.isDeleting && typingState.characterIndex < phrase.length) {
+        typingState.characterIndex += 1;
+        renderTypingText();
+        scheduleTypingStep(80);
+        return;
+    }
+
+    if (!typingState.isDeleting) {
+        typingState.isDeleting = true;
+        scheduleTypingStep(1400);
+        return;
+    }
+
+    if (typingState.characterIndex > 0) {
+        typingState.characterIndex -= 1;
+        renderTypingText();
+        scheduleTypingStep(40);
+        return;
+    }
+
+    typingState.isDeleting = false;
+    typingState.phraseIndex = (
+        typingState.phraseIndex + 1
+    ) % typingPhrases.length;
+    scheduleTypingStep(300);
+};
+
+const initializeTypingEffect = () => {
+    if (typingState.timerId !== null) {
+        window.clearTimeout(typingState.timerId);
+        typingState.timerId = null;
+    }
+
+    typingState.phraseIndex = 0;
+    typingState.characterIndex = 0;
+    typingState.isDeleting = false;
+
+    if (reducedMotion.matches) {
+        typingText.textContent = typingPhrases[0];
+        typingCursor.hidden = true;
+        return;
+    }
+
+    typingCursor.hidden = false;
+    renderTypingText();
+    scheduleTypingStep(500);
+};
+
+reducedMotion.addEventListener('change', initializeTypingEffect);
+initializeTypingEffect();
+
 // form
 const contactForm = document.querySelector('#contact-form');
 const formStatus = document.querySelector('#form-status');
+const submitButton = contactForm.querySelector('button[type="submit"]');
 
 const fields = [
     ...contactForm.querySelectorAll('input, textarea')
@@ -216,7 +296,7 @@ fields.forEach((field) => {
     });
 });
 
-contactForm.addEventListener('submit', (event) => {
+contactForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     formState.touched = Object.fromEntries(
@@ -243,14 +323,38 @@ contactForm.addEventListener('submit', (event) => {
     }
 
     formStatus.classList.remove('error');
-    formStatus.textContent = '메시지가 성공적으로 작성되었습니다.';
+    formStatus.textContent = '메시지를 전송하는 중입니다.';
 
-    contactForm.reset();
+    submitButton.disabled = true;
+    submitButton.textContent = '전송 중...';
+    contactForm.setAttribute('aria-busy', 'true');
 
-    formState.errors = {};
-    formState.touched = createTouchedState();
+    try {
+        const response = await fetch(contactForm.action, {
+            method: contactForm.method,
+            headers: {
+                'Accept': 'application/json',
+            },
+            body: new FormData(contactForm),
+        });
+        if (!response.ok) {
+            throw new Error('전송에 실패했습니다.: ${response.status}');
+        }
 
-    fields.forEach(renderFieldError);
+        formStatus.textContent = '전송에 성공하였습니다. 감사합니다!';
+        contactForm.reset();
+        formState.errors = {};
+        formState.touched = createTouchedState();
+        fields.forEach(renderFieldError);
+    } catch (error) {
+        console.error('문의 전송에 실패했습니다.', error);
+        formStatus.classList.add('error');
+        formStatus.textContent = '전송 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = '보내기';
+        contactForm.setAttribute('aria-busy', 'false');
+    }
 });
 
 const GITHUB_USERNAME = 'wasw2123';

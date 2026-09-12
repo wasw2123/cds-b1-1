@@ -53,7 +53,11 @@
             <div class="hero-content container reveal">
                 <p>Hello, I am</p>
                 <h1 id="hero-title">서민혁</h1>
-                <p>웹 개발의 기초부터 차근차근 공부하며, 배운 내용을 직접 구현하고 있습니다.</p>
+                <p class="hero-typing">
+                    <span class="visually-hidden">웹 개발의 기초를 공부하고, 배운 내용을 직접 구현하며, 더 나은 코드를 고민합니다.</span>
+                    <span id="typing-text" aria-hidden="true">웹 개발의 기초를 공부합니다.</span>
+                    <span class="typing-cursor" aria-hidden="true">|</span>
+                </p>
                 <div class="hero-actions">
                     <a class="button button-primary" href="#projects">프로젝트 보기</a>
                     <a class="button button-secondary" href="#contact">문의하기</a>
@@ -113,7 +117,11 @@
                     문의 폼을 만들어야 하는 Contact 섹션입니다.
                 </p>
 
-                <form id="contact-form" novalidate>
+                <form id="contact-form"
+                    action="https://formspree.io/f/xzebqpgo"
+                    method="POST"
+                    novalidate
+                >
                     <div class="form-field">
                         <label for="name">이름</label>
                         <input type="text" id="name" name="name"

@@ -146,6 +146,9 @@ https://api.github.com/users/wasw2123/repos?sort=updated&per_page=12
 
 ![포트폴리오 다크 모드 화면](images/screenshots/dark-mode.png)
 
+### 폼 내용 전달
+![폼 내용 전달 화면](images/screenshots/CleanShot%202026-09-12%20at%2019.12.50.png)
+
 ## 향후 개선 사항
 
 - Hero 영역 타이핑 애니메이션
