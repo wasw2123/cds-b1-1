@@ -102,7 +102,7 @@ if (
     revealElements.forEach((element) => {
         revealObserver.observe(element);
     });
-};
+}
 
 const themeButton = document.querySelector('#theme-toggle');
 const themeIcon = themeButton.querySelector('span');
@@ -338,7 +338,7 @@ contactForm.addEventListener('submit', async (event) => {
             body: new FormData(contactForm),
         });
         if (!response.ok) {
-            throw new Error('전송에 실패했습니다.: ${response.status}');
+            throw new Error(`전송에 실패했습니다 : ${response.status}`);
         }
 
         formStatus.textContent = '전송에 성공하였습니다. 감사합니다!';
@@ -412,7 +412,7 @@ const getProjectErrorMessage = (status) => {
         return '사용자를 찾을 수 없습니다.';
     }
 
-    return '프로젝트를 불러오는 중 오류가 발생했습니다.';
+    return '프로젝트를 불러올 수 없습니다.';
 };
 
 const renderProjectFilter = () => {
@@ -477,7 +477,7 @@ const renderProjects = () => {
     if (projectState.status === 'empty') {
         projectsContent.innerHTML = `
             <p class="status-message">
-                프로젝트가 없습니다.
+                표시할 프로젝트가 없습니다.
             </p>
         `;
         return;
