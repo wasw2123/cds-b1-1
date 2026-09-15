@@ -64,7 +64,6 @@ cds-b1-1/
 ├── js/
 │   └── script.js
 ├── images/
-│   ├── profile.jpeg
 │   ├── profile.webp
 │   └── screenshots/
 └── README.md

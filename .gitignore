@@ -1,2 +1,11 @@
 # Local learning and agent reference documents
 docs/
+
+# Local AI agent instructions and runtime state
+AGENTS.md
+.agents/
+.codex/
+.omx/
+
+# Source profile photo containing private metadata
+images/profile.jpeg
